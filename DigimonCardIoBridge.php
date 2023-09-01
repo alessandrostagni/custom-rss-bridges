@@ -21,7 +21,9 @@ class DigimonCardIoBridge extends BridgeAbstract
     private function getDeckList($url) {
 	$elements_to_remove = array();    
 	$dom = getSimpleHTMLDOM($url);
-	$deckList = $dom->find('body', 0)->find('main', 0)->find('div[class=container]',0)->find('div[class=info-area]',0)->find('div[id=full-deck]', 0);
+	$infoArea = $dom->find('body', 0)->find('main', 0)->find('div[class=container]',0)->find('div[class=info-area]',0);
+	$deckList = $infoArea->find('div[id=full-deck]', 0);
+	$deckList->author = $infoArea->find('div[class=deck-metadata-container]', 0)->find('div[class=deck-metadata-info]', 0)->find('span', 0)->find('a')[1]->innertext;
 	$mainDeck = $deckList->find('div[id=main_deck]', 0);
 	$mainDeck->setAttribute('style', '');
 	foreach($mainDeck->find('div[class=cardGroupSingle]') as $cardGroup){
@@ -64,10 +66,10 @@ class DigimonCardIoBridge extends BridgeAbstract
 	    $div = $a->find('div', 0);
 	    $imgUri = $div->getAttribute('data-src');
 	    $entryTitle = $div->find('h4', 0);
-	    $to_remove = $entryTitle->find('span', 0);
-	    $to_remove->outertext='';
+	    $entryTitle->find('span', 0)->outertext = '';
 	    $this->items[] = [
 		 'title' => $entryTitle->innertext,   
+		 'author' => $deckList->author,
 		 'uri' => $uri,
 		 'content' => "<a href=\"$uri\"><img align=center src=\"$imgUri\"></img></a><h1><font color=\"$color\">$entryTitle</font></h1>$deckList"
 	    ];
