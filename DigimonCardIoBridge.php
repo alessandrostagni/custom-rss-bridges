@@ -24,6 +24,8 @@ class DigimonCardIoBridge extends BridgeAbstract
 	$infoArea = $dom->find('body', 0)->find('main', 0)->find('div[class=container]',0)->find('div[class=info-area]',0);
 	$deckList = $infoArea->find('div[id=full-deck]', 0);
 	$deckList->author = $infoArea->find('div[class=deck-metadata-container]', 0)->find('div[class=deck-metadata-info]', 0)->find('span', 0)->find('a')[1]->innertext;
+	$deckList->find('div[id=main_deck_stack]', 0)->outertext = '';
+	$deckList->find('div[id=main_deck_gallery]', 0)->outertext = '';
 	$mainDeck = $deckList->find('div[id=main_deck]', 0);
 	$mainDeck->setAttribute('style', '');
 	foreach($mainDeck->find('div[class=cardGroupSingle]') as $cardGroup){
